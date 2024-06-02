@@ -1,0 +1,80 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} {{ user.username|title }} | EventsPro {% endblock title %}
+
+{% block content %}
+
+<div class="banner" style="height: 200px;">
+    <div class="banner-box">
+        <h3>Profile</h3>
+    </div>
+</div>
+
+<div class="profile-info">
+    <img class="profile-image" src="{{ user.image.url }}" alt="{{ user.first_name }} {{ user.last_name }}">
+    <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+    <p style="font-size: 15px;">{{ user.email }}</p>
+</div>
+
+<div class="user-bookings-container">
+    <h3 style="color: #333;">Booked Events</h3>
+    <div class="booked-events">
+        {% if user_bookings %}
+            <ul id="booking-list">
+                {% for booking in user_bookings %}
+                    <li class="booking-card">
+                        <div class="booking-card-main">
+                            <div class="booking-card-image">
+                                <a class="user-booking-link h4" href="{% url 'main:event_detail' booking.event.title %}">
+                                    {{ booking.event.title }}
+                                </a>
+                                <a href="{% url 'main:event_detail' booking.event.title %}">
+                                    <img class="event-image" src="{{ booking.event.avatar.url }}" alt="{{ booking.event.title }}">
+                                </a>
+                            </div>
+                            <p class="mb-1">{{ booking.event.description|truncatewords:20 }}</p>
+                            <p class="mb-1"><strong>Date: </strong>{{ booking.event.start_date }}</p>
+                            <p><strong>Venue: </strong>{{ booking.event.venue }}</p>
+                        </div>
+                        <div class="card-bottom" style="display: flex; gap: 10px;">
+                            <button class="ticket-button" 
+                                onclick="downloadTicket('{{ booking.id }}', '{{ booking.event.title }}', '{{ booking.event.start_date }}', '{{ booking.booking_id }}', '{{ user.first_name }} {{ user.last_name }}')">
+                                Download Ticket
+                            </button>
+                            <form action="{% url 'main:download_event_ics' booking.event.id %}" method="get">
+                                <button class="ticket-button">Add to Calendar</button>
+                            </form>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You have not booked any events.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Pagination -->
+<div class="pagination">
+    <span class="step-links">
+        {% if user_bookings.has_previous %}
+            <a href="?page=1" class="btn">&laquo; First</a>
+            <a href="?page={{ user_bookings.previous_page_number }}" class="btn">Previous</a>
+        {% endif %}
+        <span class="current">
+            Page {{ user_bookings.number }} of {{ user_bookings.paginator.num_pages }}.
+        </span>
+        {% if events.has_next %}
+            <a href="?page={{ user_bookings.next_page_number }}" class="btn">Next</a>
+            <a href="?page={{ user_bookings.paginator.num_pages }}" class="btn">Last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock content %}
+
+<!-- Required js file(s) -->
+{% block script %}
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.7/dist/html2canvas.min.js"></script>
+{% endblock script %}
