@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} Register | EventsPro {% endblock title %}
+
+{% block content %}
+<div class="banner" style="height: 200px;">
+    <div class="banner-box">
+        <h3>Sign Up</h3>
+    </div>
+</div>
+
+<div class="form-error">
+{% if form.errors %}
+{% for key, value in form.errors.items %}
+<small class="form-error-small">{{ value }}</small>
+{% endfor %}
+{% endif %}
+</div>
+
+<div style="margin:60px 70px 10px 70px;">
+    <form method="POST" class="mb-3" style="letter-spacing: 1px;">
+        {% csrf_token %}
+
+        <fieldset>
+            <div class="form-fields">
+                <!-- <legend>Add an Event</legend> -->
+                <label for="first_name" class="form-top mt-0 pt-0">First name: {{ form.first_name }}</label>
+                <label for="last_name" class="form-top">Last name: {{ form.last_name }}</label>
+                <label for="username" class="form-top">Username: {{ form.username }}</label>
+                <label for="email" class="form-top">Email: {{ form.email }}</label>
+                <label for="password1" class="form-top">Password: {{ form.password1 }}</label>
+                <label for="password2" class="form-top">Confirm password: {{ form.password2 }}</label>
+            </div>
+
+            <div class="form-fields pt-4">
+                <input class="submitBtn" type="submit" value="Sign Up">
+                <div class="pt-0" style="font-size:13px;">
+                    Already have an account? <a href="">Log in</a>
+                </div>
+            <div>
+        </fieldset>
+    </form>
+</div>
+
+
+{% endblock content %}
