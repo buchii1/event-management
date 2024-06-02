@@ -1,0 +1,21 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} {{ organizer.name }} | EventsPro {% endblock title %}
+
+{% block content %}
+<div class="banner" style="height: 450px; background-image: url('{% static 'img/home/organize.jpg' %}');">
+    <div class="banner-box organize">
+        <img src="{{ organizer.image.url }}" alt="{{ organizer.name }}" class="profile-image organize">
+        <h3>{{ organizer.name }}</h3>
+        <p>{{ organizer.title }}</p>
+        <p class="mb-0">Email: {{ organizer.email }}</p>
+        <p>Location: {{ organizer.address }}</p>
+    </div>
+</div>
+
+<div class="events-container">
+    <h2 class="mb-0 pt-2">About me</h2>
+    <p>{{ organizer.bio }}</p>
+</div>
+
+{% endblock content %}

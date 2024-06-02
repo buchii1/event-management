@@ -1,0 +1,47 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} 
+{% if add_organizer %} Add an Organizer {% else %} Edit {{ organizer.name }} {% endif %} | EventsPro
+{% endblock title %}
+
+{% block content %}
+<div class="banner" style="height: 200px;">
+    <div class="banner-box">
+        <h3>
+            {% if add_organizer %} Add New Organizer {% else %} Edit {{ organizer.name }} {% endif %}
+        </h3>
+    </div>
+</div>
+
+<div class="form-error">
+{% if form.errors %}
+{% for key, value in form.errors.items %}
+<small class="form-error-small">{{ value }}</small>
+{% endfor %}
+{% endif %}
+</div>
+
+<div style="margin:60px 70px 10px 70px;">
+    <form method="POST" enctype="multipart/form-data" class="mb-3" style="letter-spacing: 1px;">
+        {% csrf_token %}
+
+        <fieldset>
+            <div class="form-fields">
+                <label for="name" class="form-top">Name: {{ form.name }}</label>
+                <label for="email" class="form-top">Email Address: {{ form.email }}</label>
+                <label for="title" class="form-top">Job Title: {{ form.title }}</label>
+                <label for="address" class="form-top">Location: {{ form.address }}</label>
+                <label for="bio" class="form-top">Bio: {{ form.bio }}</label>
+                <label for="image" class="form-top">Profile Image: {{ form.image }}</label>
+            </div>
+        </fieldset>
+
+        <div class="form-fields pt-0">
+            <input class="submitBtn" type="submit"
+            {% if add_organizer %} value="Add Organizer" {% else %} value="Update Organizer" {% endif %}>
+        </div>
+        
+    </form>
+</div>
+
+{% endblock content %}
