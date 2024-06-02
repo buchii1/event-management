@@ -1,0 +1,65 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} Events | EventsPro {% endblock title %}
+
+{% block content %}
+<div class="banner" style="height: 200px;">
+    <div class="banner-box">
+        <h3>All Events</h3>
+    </div>
+</div>
+
+<div class="events-container">
+    {% for event in events %}
+    <div class="event-item">
+        <div class="avatar">
+            <a href="{% url 'main:event_detail' event.title %}">
+                <img src="{{ event.avatar.url }}" alt="{{ event.title }}">
+            </a>
+        </div>
+        <div class="event-details">
+            <p class="pb-2"><strong>{{ event.start_date|date:"F j, Y" }}</strong> - <span style="color: #002E5D;"> {{ event.venue|upper }} </span></p>
+            {% if user.is_authenticated and user.is_superuser %}
+                <div class="pb-2">
+                    <a class="user-booking-link h4" href="{% url 'main:event_detail' event.title %}">
+                        <strong>{{ event.title }}</strong>
+                    </a>
+                </div>
+            {% else %}
+                <p class="h3 pb-3"><strong>{{ event.title }}</strong></p>
+            {% endif %}
+            <p class="pb-4">{{ event.description|truncatewords:45 }}</p>
+            {% if user.is_authenticated and user.is_superuser %}
+            <div style="display: flex; gap: 10px;">
+                <a href="{% url 'main:edit_event' event.title %}" class="btn">Edit Event</a>
+                <form action="{% url 'main:delete_event' event.pk %}" method="get" 
+                    onsubmit="return confirm('Are you sure you want to delete this event?');">
+                    <button class="btn btn-red">Delete Event</button>                
+                </form>
+            </div>
+            {% else %}
+                <a href="{% url 'main:event_detail' event.title %}" class="btn">View Details</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+<div class="pagination">
+    <span class="step-links">
+        {% if events.has_previous %}
+            <a href="?page=1" class="btn">&laquo; First</a>
+            <a href="?page={{ events.previous_page_number }}" class="btn">Previous</a>
+        {% endif %}
+        <span class="current">
+            Page {{ events.number }} of {{ events.paginator.num_pages }}.
+        </span>
+        {% if events.has_next %}
+            <a href="?page={{ events.next_page_number }}" class="btn">Next</a>
+            <a href="?page={{ events.paginator.num_pages }}" class="btn">Last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock content %}

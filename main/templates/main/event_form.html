@@ -1,0 +1,51 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} 
+    {% if add_event %} Add Event {% else %} Edit {{ event.title }} {% endif %} | EventsPro
+{% endblock title %}
+
+{% block content %}
+<div class="banner" style="height: 200px;">
+    <div class="banner-box">
+        <h3>{% if add_event %} Add New Event {% else %} Edit {{ event.title }} {% endif %}
+        </h3>
+    </div>
+</div>
+
+<div class="form-error">
+{% if form.errors %}
+{% for key, value in form.errors.items %}
+<small class="form-error-small">{{ value }}</small>
+{% endfor %}
+{% endif %}
+</div>
+
+<div style="margin:60px 70px 10px 70px;">
+    <form method="POST" enctype="multipart/form-data" class="mb-3" style="letter-spacing: 1px;">
+        {% csrf_token %}
+
+        <fieldset>
+            <div class="form-fields">
+                <!-- <legend>Add an Event</legend> -->
+                <label for="title" class="form-top">Title: {{ form.title }}</label>
+                <label for="start_date" class="form-top">Start Date: {{ form.start_date }}</label>
+                <label for="end_date" class="form-top">End Date: {{ form.end_date }}</label>
+                <label for="reg_deadline" class="form-top">Registration Deadline: {{ form.reg_deadline }}</label>
+                <label for="venue" class="form-top">Venue: {{ form.venue }}</label>
+                <label for="capacity" class="form-top">Capacity: {{ form.capacity }}</label>
+                <label for="description" class="form-top">Description: {{ form.description }}</label>
+                <label for="avatar" class="form-top">Avatar: {{ form.avatar }}</label>
+                <label for="image" class="form-top">Banner Image: {{ form.image }}</label>
+                <label for="organizers" class="form-top">Organizers: {{ form.organizers }}</label>
+            </div>
+        </fieldset>
+
+        <div class="form-fields pt-0">
+            <input class="submitBtn" type="submit"
+            {% if add_event %} value="Add Event" {% else %} value="Update Event" {% endif %}>
+        </div>
+        
+    </form>
+</div>
+
+{% endblock content %}

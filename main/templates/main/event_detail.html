@@ -1,0 +1,89 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} {{ event.title }} | EventsPro {% endblock title %}
+
+{% block content %}
+<div class="event-detail" style="background-image: url('{{ event.image.url }}');"></div>
+
+<div class="event-detail-container">
+    <h1>{{ event.title }}</h1>
+    <p class="pt-2">{{ event.start_date|date:"F j, h:i A" }} <em>{{ time_to_event }}</em></p>
+    <p style="text-decoration: underline; font-weight: 600;">{{ event.venue }}</p>
+    <p>Spots left: {{ slots_left }}</p>
+
+    <div class="rsvp-container">
+        {% if user_bookings %}
+            <p class="text-center pt-4 h2">See you there!</p>
+            <p class="text-center">You are attending.</p>
+        {% elif event.reg_deadline > today %}
+            <h3 style="font-weight: 400;" class="text-center">RSVP for this event now!</h3>
+            <hr>
+            <div class="rsvp-flex">
+                <p><strong>{{ event.title }}</strong></p>
+                <p>Registration ends {{ event.reg_deadline }}</p>
+                <input id="bookEventBtn" class="btn-bio rsvp" type="submit" value="RSVP">
+            </div>
+        {% else %}
+            <p class="text-center pt-5 h5">Sorry, registration is currently closed.</p>
+        {% endif %}
+    </div>
+
+    <!-- Booking modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h5>Book Event</h5>
+            </div>
+            <div class="modal-body">
+                {% if user.is_authenticated %}
+                    <!-- Booking form with user's information prefilled -->
+                    <form action="{% url 'main:book_event' event.id %}" method="post">
+                        {% csrf_token %}
+
+                        <div class="form-fields">
+                            <label for="title" class="form-top">First name:
+                                <input class="text" type="text" value="{{ user.first_name }}">
+                            </label>
+                            <label for="title" class="form-top">Last name:
+                                <input type="text" value="{{ user.last_name }}">
+                            </label>
+                            <label for="title" class="form-top">Email:
+                                <input type="email" value="{{ user.email }}">
+                            </label>
+                            <br>
+                            <input type="submit" class="submitBtn" value="Book Event">
+                        </div>
+                    </form>
+                {% else %}
+                    <!-- Display text with a link to login -->
+                    <p class="text-center pt-3">Login is required to book an event. 
+                        <a href="{% url 'accounts:login'  %}?next={{ request.path }}">Login</a>
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <h2 class="text-center pt-5">About this event</h2>
+    <p class="pt-3">{{ event.description|safe }}</p>
+
+    <h2 class="text-center pt-5 pb-5">Organizers:</h2>
+    <div class="event-organizers">
+        {% for organizer in event.organizers.all %}
+            <div class="organise">
+                <img src="{{ organizer.image.url }}" alt="{{ organizer.name }}">
+                <p>{{ organizer.name }}</p>
+                <p class="pb-3">{{ organizer.title }}</p>
+                <a href="{% url 'main:organizer' organizer.name %}" class="btn-bio">see bio</a>
+            </div>
+        {% endfor %}
+    </div>    
+</div>
+
+{% endblock content %}
+
+<!-- Required js file(s) -->
+{% block script %}
+    <script src="{% static 'js/script.js' %}"></script>
+{% endblock script %}
