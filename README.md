@@ -13,9 +13,6 @@ This project serves as a learning experience for me as an aspiring software engi
 - **Ticket Generation**: Downloadable event tickets with unique booking IDs for enhanced security.
 - **Calendar Integration**: Ability to add booked events to calendar applications for efficient planning.
 
-You can watch a demonstration of the software running and a walkthrough of the code in this 
-[Software Demo Video.](https://youtu.be/Lya2RwyY7SE)
-
 # Web Pages
 - **Sign Up Page**: Allows new users to register on the platform.
 - **Log In Page**: Enables existing users to log in to their accounts securely.
